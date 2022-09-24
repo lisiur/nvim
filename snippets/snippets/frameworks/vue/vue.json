@@ -1,0 +1,7 @@
+{
+    "vue3-ts-template": {
+        "prefix": "vue3",
+        "body": ["<template></template>"],
+        "description": "Snippet for vue3 Typescript Template"
+    }
+}
