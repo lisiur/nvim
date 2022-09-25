@@ -42,16 +42,9 @@ wk.register({
     },
 
     ["<leader>"] = {
-        p = {
-            name = "Project",
-            p = { "<cmd>lua require('telescope').extensions.project.project{}<cr>", "Select Project" },
-            r = { "<cmd>lua require('telescope').extensions.frecency.frecency{}<cr>", "Frecency" },
-            e = { "<cmd>Telescope oldfiles<cr>", "OldFiles" },
-            f = { "<cmd>lua require('core.commands.telescope').find_files_under_project()<cr>", "Select File" },
-            s = { "<cmd>lua require('core.commands.telescope').search_under_project()<cr>", "Global Search" },
-            g = { "<cmd>Telescope git_files<cr>", "Select Git File" },
-            z = { "<cmd>Telescope zoxide list<cr>", "Zoxide List" },
-        },
+        [";"] = { "<cmd>NvimTreeFindFile<cr>", "Focurs Current File In Explorer" },
+        ["ct"] = { "<cmd>lua require('core.commands.theme').change_theme()<cr>", "Change Theme" },
+        e = { "<cmd>NvimTreeToggle<cr>", "Toggle Explorer" },
         f = {
             name = "Find Buffer",
             l = { "<cmd>HopChar1CurrentLineAC<cr>", "Jump Current Line By One Char After Cursor" },
@@ -63,22 +56,6 @@ wk.register({
             ["/"] = { "<cmd>HopPattern<cr>", "Jump Visible Buffer By Pattern" },
         },
         l = { "<cmd>lua vim.lsp.buf.format {async = true}<cr>", "Format" },
-        e = { "<cmd>NvimTreeToggle<cr>", "Toggle Explorer" },
-        [";"] = { "<cmd>NvimTreeFindFile<cr>", "Focurs Current File In Explorer" },
-        u = { "<cmd>UndotreeToggle<cr>", "Toggle UndoTree" },
-        s = {
-            name = "Session",
-            s = { "<cmd>SaveSession<cr>", "Save Session" },
-            r = { "<cmd>RestoreSession<cr>", "Save Session" },
-            d = { "<cmd>DeleteSession<cr>", "Save Session" },
-        },
-        t = {
-            name = "Terminal",
-            t = { "<cmd>lua require('core.commands.toggleterm').toggle_unname()<cr>)>", "Toggle GitUI" },
-            o = { "<cmd>lua require('core.commands.toggleterm').toggle_oneshot()<cr>)>", "Toggle GitUI" },
-            g = { "<cmd>lua require('core.commands.toggleterm').toggle_gitui()<cr>)>", "Toggle GitUI" },
-        },
-        g = { "<cmd>lua require('core.commands.toggleterm').toggle_gitui()<cr>)>", "Toggle GitUI" },
         o = {
             name = "Org",
             g = {
@@ -86,12 +63,46 @@ wk.register({
                 n = { "<cmd>Neorg gtd capture<cr>", "New Task" }
             },
         },
+        p = {
+            name = "Project",
+            p = { "<cmd>lua require('telescope').extensions.project.project{}<cr>", "Select Project" },
+            r = { "<cmd>lua require('telescope').extensions.frecency.frecency{}<cr>", "Frecency" },
+            e = { "<cmd>Telescope oldfiles<cr>", "OldFiles" },
+            f = { "<cmd>lua require('core.commands.telescope').find_files_under_project()<cr>", "Select File" },
+            s = { "<cmd>lua require('core.commands.telescope').search_under_project()<cr>", "Global Search" },
+            g = { "<cmd>Telescope git_files<cr>", "Select Git File" },
+            z = { "<cmd>Telescope zoxide list<cr>", "Zoxide List" },
+        },
+        s = {
+            name = "Session",
+            s = { "<cmd>SaveSession<cr>", "Save Session" },
+            r = { "<cmd>RestoreSession<cr>", "Save Session" },
+            d = { "<cmd>DeleteSession<cr>", "Save Session" },
+        },
+        u = { "<cmd>UndotreeToggle<cr>", "Toggle UndoTree" },
         z = {
             name = "Zen Mode",
             n = { "<cmd>TZNarrow<cr>", "Narrow a text region for better focus" },
             f = { "<cmd>TZFocus<cr>", "Foucs the current window" },
             m = { "<cmd>TZMinimalist<cr>", "Disable ui components" },
             z = { "<cmd>TZAtaraxis<cr>", "Good ol' zen mode" },
+        },
+        [","] = {
+            name = "Plugin",
+            p = {
+                name = "Packer",
+                s = { "<cmd>PackerSync<cr>", "Sync Plugins" },
+                c = { "<cmd>PackerCompile<cr>", "Compile Plugins" },
+                i = { "<cmd>PackerInstall<cr>", "Install Plugins" },
+                u = { "<cmd>PackerUpdate<cr>", "Update Plugins" },
+                S = { "<cmd>PackerStatus<cr>", "Show Plugins Status" },
+                C = { "<cmd>PackerClean<cr>", "Clean Unused Plugins" },
+            },
+            l = {
+                name = "lsp",
+                i = { "<cmd>LspInstall<cr>", "Install" },
+                I = { "<cmd>LspInfo<cr>", "Info" },
+            },
         }
     },
     g = {
@@ -117,8 +128,6 @@ vim.keymap.set('n', 'L', '$', { desc = '' })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = '' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = '' })
 vim.keymap.set('n', '<C-s>', '<cmd>write<cr>', { desc = '' })
-vim.keymap.set('n', '<C-u>', '9k', { desc = '' })
-vim.keymap.set('n', '<C-d>', '9j', { desc = '' })
 vim.keymap.set('n', '<C-a>', 'ggVG', { desc = '' })
 
 vim.keymap.set('i', '<C-b>', "<Left>")
@@ -154,8 +163,6 @@ vim.keymap.set('n', '<A-j>', '<C-w>j', { desc = '' })
 vim.keymap.set('n', '<A-k>', '<C-w>k', { desc = '' })
 vim.keymap.set('n', '<A-l>', '<C-w>l', { desc = '' })
 
-vim.keymap.set('i', '<A-.>', "<Plug>(TaboutMulti)")
-vim.keymap.set('i', '<A-,>', "<Plug>(TaboutBackMulti)")
 set_float_term_keymap("g", "gitui")
 set_float_term_keymap("u")
 set_float_term_keymap("i")

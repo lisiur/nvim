@@ -1,5 +1,4 @@
 local vars = require("core.vars")
-local user_config = require("config")
 
 vim.o.termguicolors = true
 vim.o.mouse = "a"
@@ -93,24 +92,16 @@ vim.o.breakindentopt = "shift:2,min:20"
 vim.o.wrap = false
 vim.o.linebreak = true
 vim.o.number = true
-vim.o.relativenumber = true
+-- vim.o.relativenumber = true
 vim.o.foldenable = true
 vim.o.signcolumn = "yes"
 vim.o.conceallevel = 0
 vim.o.concealcursor = "niv"
-
-if vars.is_mac then
-    vim.g.clipboard = {
-        name = "macOS-clipboard",
-        copy = { ["+"] = "pbcopy", ["*"] = "pbcopy" },
-        paste = { ["+"] = "pbpaste", ["*"] = "pbpaste" },
-        cache_enabled = 0,
-    }
-end
+-- vim.o.shell = "C:\\Users\\lisiu\\.local\\bin\\nu\\bin\\nu.exe -i"
 
 vim.g.encoding = "UTF-8"
 vim.g.loaded = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.python_host_prog = user_config.python_host_prog
-vim.g.python3_host_prog = user_config.python3_host_prog
--- vim.g.sqlite_clib_path = user_config.sqlite_clib_path
+vim.g.python_host_prog = vim.g.user_config.python_host_prog
+vim.g.python3_host_prog = vim.g.user_config.python3_host_prog
+vim.g.sqlite_clib_path = vim.g.user_config.sqlite_clib_path
