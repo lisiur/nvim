@@ -4,24 +4,29 @@ vim.g.mapleader = " "
 vim.api.nvim_set_keymap("n", " ", "", { noremap = true })
 vim.api.nvim_set_keymap("x", " ", "", { noremap = true })
 
-local function set_term_keymap(mode, name)
+local function set_term_keymap(mode, name, start_cmd)
     local key = '<A-' .. name .. '>'
-    local cmd = '<cmd>lua require("core.commands.toggleterm").toggle_' .. mode .. '("' .. name .. '")<cr>'
+    local cmd = nil
+    if start_cmd then
+        cmd = string.format('<cmd>lua require("core.commands.toggleterm").toggle_%s("%s", "%s")<cr>', mode, name, start_cmd)
+    else
+        cmd = string.format('<cmd>lua require("core.commands.toggleterm").toggle_%s("%s")<cr>', mode, name)
+    end
     vim.keymap.set('n', key, cmd, { desc = '' })
     vim.keymap.set('i', key, cmd, { desc = '' })
     vim.keymap.set('t', key, cmd, { desc = '' })
 end
 
-local function set_float_term_keymap(name)
-    set_term_keymap('float', name)
+local function set_float_term_keymap(name, start_cmd)
+    set_term_keymap('float', name, start_cmd)
 end
 
-local function set_vertical_term_keymap(name)
-    set_term_keymap('vertical', name)
+local function set_vertical_term_keymap(name, start_cmd)
+    set_term_keymap('vertical', name, start_cmd)
 end
 
-local function set_horizontal_term_keymap(name)
-    set_term_keymap('horizontal', name)
+local function set_horizontal_term_keymap(name, start_cmd)
+    set_term_keymap('horizontal', name, start_cmd)
 end
 
 wk.register({
@@ -151,7 +156,7 @@ vim.keymap.set('n', '<A-l>', '<C-w>l', { desc = '' })
 
 vim.keymap.set('i', '<A-.>', "<Plug>(TaboutMulti)")
 vim.keymap.set('i', '<A-,>', "<Plug>(TaboutBackMulti)")
-
+set_float_term_keymap("g", "gitui")
 set_float_term_keymap("u")
 set_float_term_keymap("i")
 set_float_term_keymap("o")

@@ -47,29 +47,18 @@ local function hide_term(name)
     end
 end
 
-function M.toggle_gitui()
-    local name = '_gitui'
-    if not get_term(name) then
-        local Terminal = require("toggleterm.terminal").Terminal
-        register_term(name, Terminal:new({
-            cmd = "gitui",
-            direction = "float",
-            dir = root_dir,
-            hidden = true,
-            float_opts = float_opts,
-            start_in_insert = true,
-            env = {
-                TERM_NAME = "gitui"
-            },
-        }), "float")
+function M.hide_all_float()
+    for _name, _ in pairs(Terms) do
+        if is_float(_name) then
+            hide_term(_name)
+        end
     end
-    toggle_term(name)
 end
 
-function M.toggle_float(name)
+function M.toggle_float(name, cmd)
     if not get_term(name) then
         local Terminal = require("toggleterm.terminal").Terminal
-        register_term(name, Terminal:new({
+        local opt = {
             direction = "float",
             dir = root_dir,
             hidden = true,
@@ -78,23 +67,23 @@ function M.toggle_float(name)
             env = {
                 TERM_NAME = name
             },
-        }), "float")
+        }
+        if cmd then
+            opt.cmd = cmd
+        end
+        register_term(name, Terminal:new(opt), "float")
     end
     -- 打开前关闭所有其他浮动 Terminal
     if not is_open(name) then
-        for _name, _ in pairs(Terms) do
-            if is_float(_name) then
-                hide_term(_name)
-            end
-        end
+        M.hide_all_float()
     end
     toggle_term(name)
 end
 
-function M.toggle_vertical(name)
+function M.toggle_vertical(name, cmd)
     if not get_term(name) then
         local Terminal = require("toggleterm.terminal").Terminal
-        register_term(name, Terminal:new({
+        local opt = {
             direction = "vertical",
             dir = root_dir,
             hidden = true,
@@ -102,7 +91,11 @@ function M.toggle_vertical(name)
             env = {
                 TERM_NAME = name
             },
-        }), "vertical")
+        }
+        if cmd then
+            opt.cmd = cmd
+        end
+        register_term(name, Terminal:new(opt), "vertical")
     end
     -- 打开前关闭所有其他 horizontal Terminal
     if not is_open(name) then
@@ -115,10 +108,10 @@ function M.toggle_vertical(name)
     toggle_term(name)
 end
 
-function M.toggle_horizontal(name)
+function M.toggle_horizontal(name, cmd)
     if not get_term(name) then
         local Terminal = require("toggleterm.terminal").Terminal
-        register_term(name, Terminal:new({
+        local opt = {
             direction = "horizontal",
             dir = root_dir,
             hidden = true,
@@ -126,7 +119,11 @@ function M.toggle_horizontal(name)
             env = {
                 TERM_NAME = name
             },
-        }), "horizontal")
+        }
+        if cmd then
+            opt.cmd = cmd
+        end
+        register_term(name, Terminal:new(opt), "horizontal")
     end
     -- 打开前关闭所有其他 vertical Terminal
     if not is_open(name) then
