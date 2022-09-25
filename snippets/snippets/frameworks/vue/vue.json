@@ -1,7 +1,17 @@
 {
     "vue3-ts-template": {
         "prefix": "vue3",
-        "body": ["<template></template>"],
+        "body": [
+            "<template>",
+            "</template>",
+            "",
+            "<script setup lang=\"ts\">",
+            "const props = defineProps()",
+            "const emits = defineEmits()",
+            "",
+            "defineExpose({})",
+            "</script>",
+        ],
         "description": "Snippet for vue3 Typescript Template"
     }
 }
