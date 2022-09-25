@@ -1,45 +1,24 @@
 local vars = require('core.vars')
 
-local options = {}
-
-function options:new()
-    local instance = {
-        value = nil,
-    }
-    setmetatable(instance, self)
-    self.__index = self
-    return instance
+local function option(opt)
+    return vars.is_mac and opt.mac
+    or vars.is_linux and opt.linux
+    or vars.is_windows and opt.windows
 end
 
-function options:mac(arg)
-    if vars.is_mac then
-        self.value = arg
-    end
-    return self
-end
-
-function options:linux(arg)
-    if vars.is_linux then
-        self.value = arg
-    end
-    return self
-end
-
-function options:windows(arg)
-    if vars.is_windows then
-        self.value = arg
-    end
-    return self
-end
-
-local config = {}
-
-config.colorscheme = "catppuccin"
-config.catppuccin_flavour = "latte"
-config.neovide_font = "FiraCode\\ Nerd\\ Font:h15"
-config.python_host_prog = options:new():mac("/usr/bin/python"):linux("/usr/bin/python"):windows("python2").value
-config.python3_host_prog = options:new():mac("/usr/local/bin/python3"):linux("/usr/local/bin/python3"):windows("python")
-    .value
-config.sqlite_clib_path = options:new():mac(""):linux(""):windows("C:\\Users\\lisiu\\.local\\bin\\sqlite3.dll").value
-
-return config
+return {
+    neovide_font = "FiraCode\\ Nerd\\ Font:h15",
+    python_host_prog = option({
+        mac = "/usr/bin/python",
+        linux = "/usr/bin/python",
+        wndows = "python2",
+    }),
+    python3_host_prog = option({
+        mac = "/usr/local/bin/python3",
+        linux = "/usr/local/bin/python3",
+        wndows = "python",
+    }),
+    sqlite_clib_path = option({
+        windows = "C:\\Users\\lisiu\\.local\\bin\\sqlite3.dll"
+    })
+}
