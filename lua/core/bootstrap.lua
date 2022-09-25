@@ -9,13 +9,6 @@ local require_compiled_packer = function()
     vim.cmd([[colorscheme catppuccin]])
 end
 
-local remove_compiled = function()
-    local fn = vim.fn
-    if fn.empty(packer_compiled) == 0 then
-        fn.system({ 'rm', packer_compiled })
-    end
-end
-
 local ensure_packer = function()
     local fn = vim.fn
     local install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
@@ -105,7 +98,6 @@ local function init()
         vim.notify('Packer compiled success!', vim.log.levels.INFO, { title = "Packer" })
     end, {})
     vim.api.nvim_create_user_command("PackerInstall", function()
-        remove_compiled();
         _packer.install();
     end, {})
     vim.api.nvim_create_user_command("PackerUpdate", function() _packer.update() end, {})
