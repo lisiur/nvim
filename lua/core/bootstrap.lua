@@ -1,6 +1,13 @@
-local packer = nil
 local vars = require('core.vars')
+local utils = require('utils')
+local packer = nil
 local packer_compiled = vars.data_dir .. 'lua/packer_compiled.lua'
+
+local require_compiled_packer = function()
+    require('packer_compiled')
+    require('core.keymap')
+    vim.cmd([[colorscheme catppuccin]])
+end
 
 local remove_compiled = function()
     local fn = vim.fn
@@ -13,6 +20,7 @@ local ensure_packer = function()
     local fn = vim.fn
     local install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
     if fn.empty(fn.glob(install_path)) > 0 then
+        vim.notify("Clone packer...")
         fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
         return true
     end
@@ -20,7 +28,7 @@ local ensure_packer = function()
 end
 
 local packer_bootstrap = ensure_packer()
-local function init()
+local function init_packer()
     vim.cmd [[packadd packer.nvim]]
     packer = require("packer")
     packer.init({
@@ -56,40 +64,55 @@ local function init()
     end
 
     if packer_bootstrap then
+        vim.notify("Sync packer...")
         packer.sync()
-    end
-end
 
-if vim.fn.filereadable(packer_compiled) == 1 then
-    require('packer_compiled')
-else
-    if ensure_packer then -- 新装的
-        init()
-    else -- 手动把 packer_compiled 删除了
-        packer.compile()
-        require('packer_compiled')
+        utils.create_oneshot_autocmd('PackerComplete', function()
+            vim.notify("Complile Packer...")
+            packer.compile()
+            utils.create_oneshot_autocmd('PackerCompileDone', function()
+                vim.notify("Load Packer...")
+                require_compiled_packer()
+            end)
+        end)
     end
+
 end
 
 local _packer = setmetatable({}, {
     __index = function(_, key)
         if not packer then
-            init()
+            init_packer()
         end
         return packer[key]
     end
 })
 
-vim.api.nvim_create_user_command("PackerCompile", function()
-    _packer.compile()
-    vim.notify('Packer Compiled Success', vim.log.levels.INFO, { title = "Packer" })
-end, {})
-vim.api.nvim_create_user_command("PackerInstall", function()
-    remove_compiled();
-    _packer.install();
-end, {})
-vim.api.nvim_create_user_command("PackerUpdate", function() _packer.update() end, {})
-vim.api.nvim_create_user_command("PackerSync", function() _packer.sync() end, {})
-vim.api.nvim_create_user_command("PackerClean", function() _packer.clean() end, {})
-vim.api.nvim_create_user_command("PackerStatus", function() _packer.status() end, {})
-vim.api.nvim_create_user_command("PackerProfile", function() _packer.profile_output() end, {})
+local function init()
+    require('core.basic')
+
+    if packer_bootstrap then -- 第一次装 packer 要初始化
+        init_packer()
+    elseif vim.fn.filereadable(packer_compiled) == 0 then -- 未编译
+        packer_bootstrap = true -- 触发 packer.sync
+        init_packer()
+    else
+        require_compiled_packer()
+    end
+
+    vim.api.nvim_create_user_command("PackerCompile", function()
+        _packer.compile()
+        vim.notify('Packer compiled success!', vim.log.levels.INFO, { title = "Packer" })
+    end, {})
+    vim.api.nvim_create_user_command("PackerInstall", function()
+        remove_compiled();
+        _packer.install();
+    end, {})
+    vim.api.nvim_create_user_command("PackerUpdate", function() _packer.update() end, {})
+    vim.api.nvim_create_user_command("PackerSync", function() _packer.sync() end, {})
+    vim.api.nvim_create_user_command("PackerClean", function() _packer.clean() end, {})
+    vim.api.nvim_create_user_command("PackerStatus", function() _packer.status() end, {})
+    vim.api.nvim_create_user_command("PackerProfile", function() _packer.profile_output() end, {})
+end
+
+init()
