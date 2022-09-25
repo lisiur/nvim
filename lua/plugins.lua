@@ -43,6 +43,7 @@ M['rcarriga/nvim-notify'] = {
         notify.setup({
             stages = "fade_in_slide_out",
             timeout = 2500,
+            background_colour = "#000000",
         })
         vim.notify = notify
     end
