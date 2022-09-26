@@ -1,3 +1,7 @@
+require("config")
+require('core.basic')
+require("core.keymap")
+
 local vars = require('core.vars')
 local utils = require('utils')
 local packer = nil
@@ -5,7 +9,6 @@ local packer_compiled = vars.data_dir .. 'lua/packer_compiled.lua'
 
 local require_compiled_packer = function()
     require('packer_compiled')
-    require('core.keymap')
     vim.cmd([[colorscheme catppuccin]])
 end
 
@@ -82,8 +85,6 @@ local _packer = setmetatable({}, {
 })
 
 local function init()
-    require('core.basic')
-
     if packer_bootstrap then -- 第一次装 packer 要初始化
         init_packer()
     elseif vim.fn.filereadable(packer_compiled) == 0 then -- 未编译

@@ -47,15 +47,17 @@ M['rcarriga/nvim-notify'] = {
         notify.setup({
             stages = "fade_in_slide_out",
             timeout = 2500,
-            background_colour = "#000000",
+            background_colour = "Normal",
         })
         vim.notify = notify
     end
 }
 
 M['hoob3rt/lualine.nvim'] = {
-    event = "BufReadPost",
+    after = "nvim-navic",
     config = function()
+        local navic = require("nvim-navic")
+
         local function diff_source()
             local gitsigns = vim.b.gitsigns_status_dict
             if gitsigns then
@@ -81,10 +83,10 @@ M['hoob3rt/lualine.nvim'] = {
         }
         require('lualine').setup({
             options = {
+                theme = 'auto',
                 icons_enabled = true,
-                theme = 'catppuccin',
-                component_separators = "|",
-                section_separators = { left = "", right = "" },
+                -- component_separators = "|",
+                -- section_separators = { left = "", right = "" },
             },
             sections = {
                 lualine_a = { 'mode' },
@@ -114,10 +116,29 @@ M['hoob3rt/lualine.nvim'] = {
                 lualine_y = {},
                 lualine_z = {},
             },
+            winbar = {
+                lualine_a = {},
+                lualine_b = { 'filename' },
+                lualine_c = {
+                    { navic.get_location, cond = navic.is_available },
+                },
+                lualine_x = {},
+                lualine_y = {},
+                lualine_z = {},
+            },
+            inactive_winbar = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = { "filename" },
+                lualine_x = {},
+                lualine_y = {},
+                lualine_z = {},
+            },
             extensions = {
                 "nvim-tree",
                 "toggleterm",
                 "fugitive",
+                "fzf",
                 outline,
             },
         })
@@ -201,32 +222,9 @@ M['lewis6991/gitsigns.nvim'] = {
                 changedelete = { hl = "GitSignsChange", text = "~", numhl = "GitSignsChangeNr",
                     linehl = "GitSignsChangeLn" },
             },
-            keymaps = {
-                noremap = true,
-                buffer = true,
-                ["n ]g"] = {
-                    expr = true,
-                    "&diff ? ']g' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'",
-                },
-                ["n [g"] = {
-                    expr = true,
-                    "&diff ? '[g' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'",
-                },
-                ["n <leader>hs"] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
-                ["v <leader>hs"] = '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-                ["n <leader>hu"] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
-                ["n <leader>hr"] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
-                ["v <leader>hr"] = '<cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-                ["n <leader>hR"] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
-                ["n <leader>hp"] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
-                ["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line({full=true})<CR>',
-                -- Text objects
-                ["o ih"] = ':<C-U>Gitsigns select_hunk<CR>',
-                ["x ih"] = ':<C-U>Gitsigns.select_hunk<CR>',
-            },
             watch_gitdir = { interval = 1000, follow_files = true },
-            current_line_blame = true,
-            current_line_blame_opts = { delay = 1000, virtual_text_pos = "eol" },
+            -- current_line_blame = true,
+            -- current_line_blame_opts = { delay = 1000, virtual_text_pos = "eol" },
             sign_priority = 6,
             update_debounce = 100,
             status_formatter = nil, -- Use default
@@ -248,25 +246,27 @@ M["lukas-reineke/indent-blankline.nvim"] = {
     end
 }
 
-M["akinsho/bufferline.nvim"] = {
-    tag = "*",
-    event = "BufReadPost",
-    config = function()
-        require('bufferline').setup({
-            options = {
-                offsets = {
-                    {
-                        filetype = "NvimTree",
-                        text = "File Explorer",
-                        text_align = "center",
-                        padding = 1,
-                    }
-                },
-            },
-            highlights = require('catppuccin.groups.integrations.bufferline').get(),
-        })
-    end
-}
+-- M["akinsho/bufferline.nvim"] = {
+--     tag = "*",
+--     event = "BufReadPost",
+--     config = function()
+--         require('bufferline').setup({
+--             options = {
+--                 diagnostics = "nvim_lsp",
+--                 offsets = {
+--                     {
+--                         filetype = "NvimTree",
+--                         text = "File Explorer",
+--                         text_align = "center",
+--                         padding = 1,
+--                     }
+--                 },
+--                 show_close_icon = false,
+--             },
+--             highlights = require('catppuccin.groups.integrations.bufferline').get(),
+--         })
+--     end
+-- }
 
 M["j-hui/fidget.nvim"] = {
     event = "BufReadPost",
@@ -991,10 +991,13 @@ call wilder#set_option('renderer', wilder#renderer_mux({
 
 M["stevearc/dressing.nvim"] = {}
 
+-- https://github.com/karb94/neoscroll.nvim
 M["karb94/neoscroll.nvim"] = {
     event = "BufReadPost",
     config = function()
-        require('neoscroll').setup()
+        require('neoscroll').setup({
+            easing_function = "quadratic"
+        })
     end
 }
 
