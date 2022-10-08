@@ -11,7 +11,11 @@ local prefix_s = utils.set_keymap_prefix("n", "s")
 prefix_leader.cmd('c', '', 'Change')
 prefix_leader.cmd('ct', 'lua require("core.commands.theme").change_theme()', 'Change Theme')
 
-prefix_leader.cmd('e', 'NvimTreeToggle', 'Toggle Explorer')
+if vim.g.vscode then
+    prefix_leader.vscode_call('e', "workbench.action.toggleSidebarVisibility", 'Toggle Explorer')
+else
+    prefix_leader.cmd('e', 'NvimTreeToggle', 'Toggle Explorer')
+end
 
 prefix_leader.cmd('f', 'HopChar2', 'Jump Visible Buffer By Two Chars')
 
@@ -69,21 +73,24 @@ prefix_leader.cmd(',l', '', 'Lsp')
 prefix_leader.cmd(',li', 'LspInstall', 'Install')
 prefix_leader.cmd(',lI', 'LspInfo', 'Info')
 
-prefix_g.cmd('b', 'BufferLinePick', 'Select Tab')
-prefix_g.cmd('h', 'Lspsaga lsp_finder', 'Lsp Finder')
-prefix_g.cmd('l', 'LSoutlineToggle', 'Toggle Outline')
-prefix_g.cmd(']', 'Lspsaga diagnostic_jump_next', 'Jump Next Diagnostic')
-prefix_g.cmd('[', 'Lspsaga diagnostic_jump_prev', 'Jump Prev Diagnostic')
-prefix_g.cmd('s', 'lua vim.lsp.buf.signature_help()', 'Show Signature')
-prefix_g.cmd('re', 'Lspsaga rename', 'Rename')
-prefix_g.cmd('k', 'Lspsaga hover_doc', 'Hover Doc')
-prefix_g.cmd('.', 'Lspsaga code_action', 'Code Action')
-prefix_g.cmd('d', 'Lspsaga peek_definition', 'Peek Definition')
-prefix_g.cmd('D', 'lua vim.lsp.buf.definition()', 'Go Definition')
-prefix_g.cmd('m', 'TroubleToggle', 'Toggle Trouble Panel')
-prefix_g.cmd('n', 'lua require("gitsigns").next_hunk()', 'Go Next Hunk')
-prefix_g.cmd('p', 'lua require("gitsigns").prev_hunk()', 'Go Prev Hunk')
+if not vim.g.vscode then
+    prefix_g.cmd('b', 'BufferLinePick', 'Select Tab')
+    prefix_g.cmd('h', 'Lspsaga lsp_finder', 'Lsp Finder')
+    prefix_g.cmd('l', 'LSoutlineToggle', 'Toggle Outline')
+    prefix_g.cmd(']', 'Lspsaga diagnostic_jump_next', 'Jump Next Diagnostic')
+    prefix_g.cmd('[', 'Lspsaga diagnostic_jump_prev', 'Jump Prev Diagnostic')
+    prefix_g.cmd('s', 'lua vim.lsp.buf.signature_help()', 'Show Signature')
+    prefix_g.cmd('re', 'Lspsaga rename', 'Rename')
+    prefix_g.cmd('k', 'Lspsaga hover_doc', 'Hover Doc')
+    prefix_g.cmd('.', 'Lspsaga code_action', 'Code Action')
+    prefix_g.cmd('d', 'Lspsaga peek_definition', 'Peek Definition')
+    prefix_g.cmd('D', 'lua vim.lsp.buf.definition()', 'Go Definition')
+    prefix_g.cmd('m', 'TroubleToggle', 'Toggle Trouble Panel')
+    prefix_g.cmd('n', 'lua require("gitsigns").next_hunk()', 'Go Next Hunk')
+    prefix_g.cmd('p', 'lua require("gitsigns").prev_hunk()', 'Go Prev Hunk')
+end
 
+prefix_s.raw('', '', 'Disable s')
 prefix_s.raw('k', '<cmd>sp<cr><c-w>k', 'Split Up')
 prefix_s.raw('j', '<cmd>sp<cr>', 'Split Down')
 prefix_s.raw('h', '<cmd>vsp<cr><c-w>h', 'Split Left')
@@ -91,6 +98,7 @@ prefix_s.raw('l', '<cmd>vsp<cr>', 'Split Right')
 prefix_s.raw('c', '<c-w>c', 'Close Window')
 prefix_s.raw('o', '<c-w>o', 'Close Other Windows')
 prefix_s.raw('=', '<c-w>=', 'Make All Window Same Size')
+prefix_s.cmd('m', 'tab split', 'Maxinum Current Buffer')
 
 -- 快速移动到行首/尾
 utils.set_keymap('n', 'H', '^')
@@ -119,6 +127,11 @@ utils.set_keymap('c', '<C-e>', "<End>")
 utils.set_keymap('c', '<C-h>', "<BS>")
 utils.set_keymap('c', '<C-d>', "<Del>")
 utils.set_keymap('c', '<C-t>', "<C-R>=expand('%:p:h') . '\\' <CR>")
+
+-- 系统剪切板
+utils.set_keymap('v', '<leader>y', '"+y')
+utils.set_keymap('v', '<leader>x', '"+x')
+utils.set_keymap('n', '<leader>P', '"+P')
 
 -- Visual 模式下的快速移动
 utils.set_keymap('v', 'J', ":m '>+1<cr>gv")

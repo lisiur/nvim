@@ -161,6 +161,8 @@ M['kyazdani42/nvim-tree.lua'] = {
             disable_netrw = true,
             hijack_cursor = true, -- Keeps the cursor on the first letter of the filename.
             hijack_netrw = true,
+            hijack_unnamed_buffer_when_opening = true,
+            select_prompts = true,
             renderer = {
                 special_files = { "Cargo.toml", "Makerfile", "package.json", "README.md" },
                 indent_markers = {
@@ -177,10 +179,11 @@ M['kyazdani42/nvim-tree.lua'] = {
                     git_placement = "before", -- before / after / signcolumn
                 },
             },
-            actions = {
-                change_dir = {
-                    enable = false,
-                }
+            filters = {
+                exclude = { "*.env" },
+            },
+            live_filter = {
+                always_show_folders = true
             },
             on_attach = function(bufnr)
                 local inject_node = require("nvim-tree.utils").inject_node
@@ -246,27 +249,27 @@ M["lukas-reineke/indent-blankline.nvim"] = {
     end
 }
 
--- M["akinsho/bufferline.nvim"] = {
---     tag = "*",
---     event = "BufReadPost",
---     config = function()
---         require('bufferline').setup({
---             options = {
---                 diagnostics = "nvim_lsp",
---                 offsets = {
---                     {
---                         filetype = "NvimTree",
---                         text = "File Explorer",
---                         text_align = "center",
---                         padding = 1,
---                     }
---                 },
---                 show_close_icon = false,
---             },
---             highlights = require('catppuccin.groups.integrations.bufferline').get(),
---         })
---     end
--- }
+M["akinsho/bufferline.nvim"] = {
+    tag = "*",
+    event = "BufReadPost",
+    config = function()
+        require('bufferline').setup({
+            options = {
+                diagnostics = "nvim_lsp",
+                offsets = {
+                    {
+                        filetype = "NvimTree",
+                        text = "File Explorer",
+                        text_align = "center",
+                        padding = 1,
+                    }
+                },
+                show_close_icon = false,
+            },
+            highlights = require('catppuccin.groups.integrations.bufferline').get(),
+        })
+    end
+}
 
 M["j-hui/fidget.nvim"] = {
     event = "BufReadPost",
@@ -1059,6 +1062,15 @@ M["nvim-neorg/neorg"] = {
                     }
                 }
             }
+        })
+    end
+}
+
+M["rmagatti/auto-session"] = {
+    config = function()
+        require('auto-session').setup({
+            log_level = 'error',
+            pre_save_cmds = { "lua require'nvim-tree'.setup()", "tabdo NvimTreeClose" }
         })
     end
 }

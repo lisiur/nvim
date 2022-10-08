@@ -51,6 +51,10 @@ function M.set_keymap_prefix(mode, prefix)
         cmd = function(key, cmd, desc, opt)
             key = prefix .. key
             M.set_keymap_cmd(mode, key, cmd, desc, opt)
+        end,
+        vscode_call = function(key, cmd, desc, opt)
+            cmd = "call VSCodeCall(\"" .. cmd .. "\")"
+            M.set_keymap_cmd(mode, key, cmd, desc, opt)
         end
     }
 end
